@@ -106,7 +106,7 @@ class AgePrivacyPreflight {
       reasons.add('The site is asking for data beyond an age-threshold claim.');
     }
     if (metadata.siteCanLinkProofToIdentity == true) {
-      reasons.add('The site could link the proof to a person's identity.');
+      reasons.add("The site could link the proof to a person's identity.");
     }
     if (metadata.verifierLearnsWhichSite == true) {
       reasons.add('The verifier could learn which site was visited.');
