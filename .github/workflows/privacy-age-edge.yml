@@ -1,0 +1,55 @@
+name: ADS Kill - Edge age privacy opt-in prototype
+
+on:
+  push:
+    branches:
+      - feature/privacy-age-edge-browser
+    paths:
+      - "browser_age_guard/**"
+      - ".github/workflows/privacy-age-edge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adskill-edge-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: JS syntax
+        run: |
+          node --check browser_age_guard/popup.js
+          node --check browser_age_guard/content.js
+          node --check browser_age_guard/age-signals.js
+      - name: Local age-check prompt tests
+        run: node --test browser_age_guard/tests/*.test.cjs
+      - name: Manifest and permissions check
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('browser_age_guard/manifest.json', 'utf8'));
+          if (manifest.manifest_version !== 3) process.exit(1);
+          if (manifest.permissions.some(p => p === 'webRequest' || p === 'cookies' || p === 'tabs')) process.exit(1);
+          if (!manifest.permissions.includes('activeTab')) process.exit(1);
+          if (manifest.host_permissions?.length) process.exit(1);
+          console.log('Manifest V3, no broad mandatory host permissions: PASS');
+          NODE
+      - name: Package unpacked extension
+        run: |
+          zip -r ADS-Kill-Privacy-Age-Edge-v0.1.0.zip browser_age_guard \
+            -x "browser_age_guard/tests/*"
+          unzip -l ADS-Kill-Privacy-Age-Edge-v0.1.0.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ADS-Kill-Privacy-Age-Edge-v0.1.0
+          path: ADS-Kill-Privacy-Age-Edge-v0.1.0.zip
+          retention-days: 30
