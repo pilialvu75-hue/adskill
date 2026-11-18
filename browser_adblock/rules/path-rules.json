@@ -1,0 +1,290 @@
+[
+  {
+    "id": 1001,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adserver/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1002,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adserve/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1003,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/ad-delivery/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1004,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adsystem/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1005,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/bannerads/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1006,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/prebid.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1007,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adsbygoogle.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1008,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/popunder/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1009,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/vpaid/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1010,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/advertisement.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1011,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/ad-delivery",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1012,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adrequest/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1013,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adsense.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1014,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/admanager.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1015,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/displayads/",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  },
+  {
+    "id": 1016,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "/adloader.js",
+      "domainType": "thirdParty",
+      "resourceTypes": [
+        "sub_frame",
+        "script",
+        "image",
+        "xmlhttprequest",
+        "media"
+      ]
+    }
+  }
+]
