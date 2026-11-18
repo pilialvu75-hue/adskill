@@ -41,3 +41,11 @@ catch (InvalidOperationException) { utf16Rejected = true; }
 Verify(utf16Rejected, "reject UTF-16 to prevent corruption");
 
 Console.WriteLine("Ads Kill Windows HOSTS section tests OK.");
+
+Verify(GithubReleaseUpdater.IsNewer("adskill-windows-v0.2.0-beta2"), "detect next beta");
+Verify(GithubReleaseUpdater.IsNewer("adskill-windows-v0.2.0"), "detect stable");
+Verify(GithubReleaseUpdater.IsNewer("adskill-windows-v0.2.1-beta1"), "detect new minor version");
+Verify(!GithubReleaseUpdater.IsNewer("adskill-windows-v0.2.0-beta1"), "ignore current");
+Verify(!GithubReleaseUpdater.IsNewer("adskill-windows-v0.1.0"), "ignore obsolete");
+Verify(!GithubReleaseUpdater.IsNewer("invalid-v99.0.0"), "reject alien tag");
+Verify(!GithubReleaseUpdater.IsNewer("adskill-windows-v0.2.0-beta0"), "reject invalid beta");
