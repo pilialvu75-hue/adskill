@@ -1,0 +1,43 @@
+name: ADS Kill - Windows browser ad blocking beta
+on:
+  push:
+    branches:
+      - feature/windows-edge-adblock-0.2
+    paths:
+      - "browser_adblock/**"
+      - "docs/WINDOWS_VPN_PLAN.md"
+      - ".github/workflows/ads-kill-edge-browser.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adskill-adblock-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-and-zip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify extension syntax
+        run: |
+          node --check browser_adblock/popup.js
+          node --check browser_adblock/cosmetic.js
+      - name: Verify browser manifest, safe blocking and controls
+        run: node browser_adblock/tests/validate.cjs
+      - name: Prepare ready-to-install ZIP
+        run: |
+          zip -r ADS-Kill-Edge-Browser-Shield-v0.2.0.zip browser_adblock \
+            -x "browser_adblock/tests/*" "browser_adblock/README.md"
+          unzip -l ADS-Kill-Edge-Browser-Shield-v0.2.0.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ADS-Kill-Edge-Browser-Shield-0.2.0
+          path: ADS-Kill-Edge-Browser-Shield-v0.2.0.zip
+          retention-days: 30
