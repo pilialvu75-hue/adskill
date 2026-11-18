@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ADS Kill — Privacy & Age (prototype)",
+  "version": "0.1.0",
+  "description": "Assistente locale per verifiche d'età: avvisa sugli invii sensibili senza bloccare la navigazione o simulare la verifica.",
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ADS Kill Privacy & Age"
+  },
+  "minimum_chrome_version": "102"
+}
