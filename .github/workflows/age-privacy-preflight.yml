@@ -1,0 +1,38 @@
+name: ADS Kill privacy-age offline preflight
+
+on:
+  pull_request:
+    paths:
+      - 'privacy_age/**'
+      - '.github/workflows/age-privacy-preflight.yml'
+  push:
+    paths:
+      - 'privacy_age/**'
+      - '.github/workflows/age-privacy-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: age-privacy-preflight-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pure-dart:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: privacy_age
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      - name: Resolve package (no runtime dependencies)
+        run: dart pub get
+      - name: Analyze pure Dart policy
+        run: dart analyze --fatal-infos
+      - name: Run offline, no-bypass regressions
+        run: dart run tool/self_test.dart
