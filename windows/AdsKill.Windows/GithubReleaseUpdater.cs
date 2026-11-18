@@ -110,9 +110,10 @@ public static class GithubReleaseUpdater
             await using (var output = new FileStream(tempPath, FileMode.CreateNew,
                 FileAccess.Write, FileShare.None, 81920, useAsync: true))
                 await input.CopyToAsync(output, cancellationToken);
-            await using var check = File.OpenRead(tempPath);
-            var actual = Convert.ToHexString(await SHA256.HashDataAsync(
-                check, cancellationToken)).ToLowerInvariant();
+            string actual;
+            await using (var check = File.OpenRead(tempPath))
+                actual = Convert.ToHexString(await SHA256.HashDataAsync(
+                    check, cancellationToken)).ToLowerInvariant();
             if (!CryptographicOperations.FixedTimeEquals(
                 Convert.FromHexString(actual), Convert.FromHexString(release.Sha256)))
                 throw new InvalidDataException("SHA-256 errato; download rifiutato.");
