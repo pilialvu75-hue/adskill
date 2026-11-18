@@ -1,0 +1,7 @@
+name: adskill_age_privacy
+description: Offline, non-verifying age-check data minimization preflight for ADS Kill.
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
