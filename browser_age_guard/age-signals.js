@@ -7,7 +7,7 @@
     /\b(?:must\s+be|are\s+you)\s+(?:at\s+least\s+)?18\b/i,
     /\b(?:over|older\s+than)\s+18\b/i,
     /\b18\s*\+\s*(?:only|verification|restricted)\b/i,
-    /\b(?:verifica(?:re)?\s+(?:dell['’]?\s*)?et[àa]|conferma(?:re)?\s+(?:la\s+)?(?:tua\s+)?et[àa]|dimostra(?:re)?\s+(?:la\s+)?maggiore\s+et[àa]|riservat[oa]\s+ai\s+maggiorenni|hai\s+(?:più\s+di\s+)?18\s+anni)\b/i,
+    /\b(?:verifica(?:re)?\s+(?:dell['’]?\s*)?et[àa]|conferma(?:re)?\s+(?:la\s+)?(?:tua\s+)?et[àa]|dimostra(?:re)?\s+(?:la\s+)?maggiore\s+et[àa]|riservat[oa]\s+ai\s+maggiorenni|hai\s+(?:più\s+di\s+)?18\s+anni)(?=$|[\s.,;:!?])/i,
     /\b(?:v[eé]rification\s+de\s+l['’]âge|v[eé]rif(?:ier|iez)\s+(?:votre\s+)?âge|r[eé]serv[eé]\s+aux\s+majeurs|avez.vous\s+18\s+ans|plus\s+de\s+18\s+ans)\b/i,
     /\b(?:verificaci[oó]n\s+de\s+edad|verificar\s+(?:tu\s+)?edad|confirmar\s+(?:tu\s+)?edad|mayores\s+de\s+18\s+años|tienes\s+18\s+años)\b/i
   ];
