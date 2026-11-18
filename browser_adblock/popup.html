@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ADS Kill — Ad Blocker</title>
+<style>
+:root{font:14px/1.5 Segoe UI,system-ui,sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+body{width:345px;margin:0;background:#081a2f;color:#eafffd;padding:17px}
+header{display:flex;gap:12px;align-items:center;margin-bottom:15px}
+.symbol{border:2px solid #19dcec;border-radius:14px;width:49px;height:49px;display:flex;align-items:center;justify-content:center;color:#31e5c7;font-size:29px}
+h1{margin:0;font-size:20px;line-height:1.1}
+small{color:#a9bfca;font-size:12px}
+main{background:#112d42;border:1px solid #2a6074;border-radius:15px;padding:13px}
+.status{font-size:17px;font-weight:700}
+.status.on{color:#4af0bf}.status.off{color:#ffd197}
+.note{color:#b9cfdb;font-size:12px;margin:8px 0 12px}
+button{width:100%;padding:12px;border-radius:10px;background:#2ee0c5;color:#002529;border:0;font-weight:700;font-size:14px;cursor:pointer}
+button:disabled{opacity:.45;cursor:wait}
+#message{font-size:12px;min-height:32px;color:#ffd69c}
+h2{font-size:13px;margin-top:18px}
+ul{padding-left:18px;color:#c4d5df;font-size:12px}
+li{margin-bottom:4px}
+footer{font-size:11px;color:#9cb9c7;margin-top:9px}
+</style>
+</head>
+<body>
+<header><span class="symbol" aria-hidden="true">⬡</span><div><h1>ADS Kill</h1><small>Browser Shield · Edge / Chrome · Beta 0.2</small></div></header>
+<main>
+<div id="status" class="status" role="status">Verifica in corso…</div>
+<p class="note">Blocca reti pubblicitarie conosciute, alcuni annunci incorporati e banner visibili. Non blocca i siti per categoria.</p>
+<button id="switch" disabled>Caricamento…</button>
+<p id="message" role="status"></p>
+</main>
+<h2>Cosa aspettarsi</h2>
+<ul>
+<li>Filtri attivi in Edge anche senza aprire ADS Kill Windows.</li>
+<li>Puoi disattivare la protezione in qualsiasi momento.</li>
+<li>YouTube: gli annunci nel video possono ancora passare.</li>
+<li>Nessun account, VPN cloud, telemetria o raccolta della cronologia.</li>
+</ul>
+<footer>Per confrontare i risultati, ricarica la pagina dopo ogni cambio.</footer>
+<script src="popup.js"></script>
+</body></html>
