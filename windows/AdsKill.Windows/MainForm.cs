@@ -11,6 +11,11 @@ public sealed class MainForm : Form
     private readonly Button _enable;
     private readonly Button _disable;
     private readonly Button _reward;
+    private readonly Label _updateStatus;
+    private readonly Button _checkUpdates;
+    private readonly Button _downloadUpdate;
+    private GithubReleaseUpdater.ReleaseInfo? _newRelease;
+    private readonly CancellationTokenSource _updateCancel = new();
     private readonly System.Windows.Forms.Timer _timer;
     private DateTimeOffset? _rewardDeadline;
 
@@ -18,7 +23,7 @@ public sealed class MainForm : Form
     {
         Text = "Ads Kill — Windows (beta)";
         Width = 635;
-        Height = 565;
+        Height = 720;
         MinimumSize = new Size(580, 465);
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = Color.FromArgb(247, 250, 253);
@@ -88,6 +93,26 @@ public sealed class MainForm : Form
         _reward.Click += (_, _) => BeginReward();
 
         _message = AddLabel("", 11, false, 73);
+        AddLabel("AGGIORNAMENTI ADS KILL", 15, true, 35);
+        _updateStatus = AddLabel("Controllo automatico delle beta su GitHub...", 11, false, 45);
+        var updatesRow = new FlowLayoutPanel {
+            Width = 545, Height = 54, FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+        outer.Controls.Add(updatesRow);
+        _checkUpdates = new Button { Text = "Controlla aggiornamenti",
+            Width = 247, Height = 42 };
+        _downloadUpdate = new Button { Text = "Scarica nuova beta",
+            Width = 247, Height = 42, Enabled = false };
+        updatesRow.Controls.Add(_checkUpdates);
+        updatesRow.Controls.Add(_downloadUpdate);
+        _checkUpdates.Click += async (_, _) => await CheckUpdatesAsync();
+        _downloadUpdate.Click += async (_, _) => await DownloadUpdateAsync();
+        Shown += async (_, _) => await CheckUpdatesAsync();
+        AddLabel("Controllo delle versioni all'avvio; scaricamento su conferma "
+            + "con verifica SHA-256. L'installazione resta manuale fino "
+            + "all'introduzione di una firma digitale permanente.",
+            10, false, 80);
         AddLabel("Nessuna VPN, driver, estensione browser o account richiesti.", 10, false, 37);
         AddLabel("Il filtro usa 0.0.0.0 e :: per domini pubblicitari espliciti. "
             + "Non elimina gli annunci incorporati nei video e può non funzionare con DNS sicuri o cache proprie.",
@@ -101,6 +126,65 @@ public sealed class MainForm : Form
         _timer.Tick += (_, _) => TickTimer();
         _timer.Start();
         RefreshState();
+    }
+
+
+    private async Task CheckUpdatesAsync()
+    {
+        _checkUpdates.Enabled = false;
+        _downloadUpdate.Enabled = false;
+        _updateStatus.Text = "Controllo GitHub in corso...";
+        try
+        {
+            _newRelease = await GithubReleaseUpdater.CheckAsync(_updateCancel.Token);
+            if (_newRelease is null)
+                _updateStatus.Text = "Nessuna nuova versione Windows verificabile.";
+            else
+            {
+                _updateStatus.Text = "Disponibile: " + _newRelease.Tag;
+                _downloadUpdate.Enabled = true;
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception e) { _updateStatus.Text = "Controllo non riuscito: " + e.Message; }
+        finally { if (!IsDisposed && !Disposing) _checkUpdates.Enabled = true; }
+    }
+
+    private async Task DownloadUpdateAsync()
+    {
+        if (_newRelease is null) return;
+        var release = _newRelease;
+        if (MessageBox.Show(this,
+            "Scaricare " + release.Tag + " da GitHub? La firma persistente non "
+                + "è ancora configurata: l'installazione resterà manuale.",
+            "Ads Kill — beta Windows", MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question) != DialogResult.Yes) return;
+        _downloadUpdate.Enabled = false;
+        _checkUpdates.Enabled = false;
+        try
+        {
+            _updateStatus.Text = "Scaricamento e verifica SHA-256...";
+            var file = await GithubReleaseUpdater.DownloadAsync(release, _updateCancel.Token);
+            _updateStatus.Text = "ZIP verificato in: " + file;
+            MessageBox.Show(this, "Download verificato. Chiudi Ads Kill, estrai "
+                + "lo ZIP e apri il nuovo AdsKill.Windows.exe.\n\n" + file,
+                "Aggiornamento pronto", MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo {
+                FileName = "explorer.exe",
+                Arguments = "/select,\"" + file + "\"",
+                UseShellExecute = true
+            });
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception e) { _updateStatus.Text = "Download non completato: " + e.Message; }
+        finally
+        {
+            if (!IsDisposed && !Disposing) {
+                _checkUpdates.Enabled = true;
+                _downloadUpdate.Enabled = true;
+            }
+        }
     }
 
     private void ChangeProtection(bool protect)
@@ -200,6 +284,7 @@ public sealed class MainForm : Form
 
     protected override void OnFormClosing(FormClosingEventArgs e)
     {
+        _updateCancel.Cancel();
         _timer.Stop();
         if (_rewardDeadline is not null)
         {
