@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>ADS Kill Privacy &amp; Age</title>
+<style>
+:root{color-scheme:dark;font-family:Segoe UI,system-ui,sans-serif}
+body{box-sizing:border-box;background:#071526;color:#ecf8ff;margin:0;padding:16px;width:330px;line-height:1.45}
+header{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.mark{display:flex;width:42px;height:42px;align-items:center;justify-content:center;font-size:27px;color:#34ead0;border:2px solid #2ad1e9;border-radius:13px}
+h1{font-size:17px;margin:0}h2{font-size:13px;margin:15px 0 6px}
+small,.muted{color:#bbced9;font-size:12px}
+main{border:1px solid #284d5d;background:#12293d;padding:13px;border-radius:14px}
+#site{overflow-wrap:anywhere;font-weight:600}
+#state{color:#a1e9dc;min-height:37px;font-size:13px}
+button{width:100%;border:0;border-radius:10px;padding:11px;margin-top:9px;color:#052127;background:#36dcc4;font-size:13px;font-weight:700;cursor:pointer}
+button.secondary{background:#243e53;color:#f2fcff;border:1px solid #4c6978}
+button:disabled{opacity:.55;cursor:not-allowed}#result{font-size:12px;min-height:35px;margin-top:9px;color:#ffe4ae}
+a{color:#79e9ef}footer{padding-top:7px}
+</style></head>
+<body>
+<header><span class="mark" aria-hidden="true">⬡</span><div><h1>ADS Kill</h1><small>Privacy &amp; Age · anteprima Edge</small></div></header>
+<main>
+<div class="muted">Sito attuale</div><div id="site">Controllo...</div>
+<p id="state" role="status">Lettura autorizzazioni...</p>
+<button id="enable" disabled>Attiva su questo sito</button>
+<button id="disable" class="secondary" disabled>Disattiva su questo sito</button>
+<p id="result" role="status"></p>
+</main>
+<h2>Come funziona</h2>
+<p class="muted">Rileva possibili schermate di verifica dell'età. Ti suggerisce la divulgazione minima e può impedire la selezione di documenti o selfie nei moduli rilevati. Non blocca l'accesso al sito e non inventa prove d'età.</p>
+<footer class="muted">Nessun account, tracciamento, backend o caricamento dati da ADS Kill. Limite: non può garantire il blocco di tutti gli invii o delle webcam.</footer>
+<script src="popup.js"></script>
+</body></html>
