@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "ADS Kill — Browser Ad Blocker (beta)",
+  "version": "0.2.0",
+  "description": "Blocca richieste di reti pubblicitarie, banner e tracker nei browser Chromium. Tutto locale, senza server ADS Kill.",
+  "permissions": [
+    "declarativeNetRequest",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ADS Kill — protezione pubblicità"
+  },
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ads_domains",
+        "enabled": true,
+        "path": "rules/domain-rules.json"
+      },
+      {
+        "id": "ads_paths",
+        "enabled": true,
+        "path": "rules/path-rules.json"
+      }
+    ]
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "cosmetic.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    }
+  ],
+  "minimum_chrome_version": "120"
+}
