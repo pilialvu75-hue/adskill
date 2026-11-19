@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageInfo;
+import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -20,6 +22,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.util.Locale;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,8 +56,8 @@ final class UpdateClient {
         long size() { return size; }
     }
 
-    private static final String BASE = "https://api.github.com/repos/pilialvu75-hue/Ai-orchestrator-riserva";
-    private static final String TAG_PREFIX = "ads-kill-v";
+    private static final String BASE = "https://api.github.com/repos/pilialvu75-hue/adskill";
+    private static final String TAG_PREFIX = "adskill-android-v";
     private static final Pattern VERSION = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)-beta(\\d+)");
     private static final int MAX_DOWNLOAD = 120 * 1024 * 1024;
 
@@ -102,7 +105,7 @@ final class UpdateClient {
                 JSONArray assets = release.getJSONArray("assets");
                 Release found = null;
                 String version = selectedTag.substring(TAG_PREFIX.length());
-                String exactName = "ads-kill-v" + version + "-signed.apk";
+                String exactName = "AdsKill-Android-v" + version + "-signed.apk";
                 for (int i = 0; i < assets.length(); i++) {
                     JSONObject asset = assets.getJSONObject(i);
                     if (!exactName.equals(asset.optString("name"))) continue;
@@ -110,7 +113,7 @@ final class UpdateClient {
                     String digest = asset.optString("digest");
                     long size = asset.optLong("size", 0);
                     String expectedPrefix = "https://github.com/pilialvu75-hue/"
-                        + "Ai-orchestrator-riserva/releases/download/" + selectedTag + "/";
+                        + "adskill/releases/download/" + selectedTag + "/";
                     if (!url.equals(expectedPrefix + exactName)
                         || !digest.matches("sha256:[0-9a-fA-F]{64}")
                         || size < 1024 || size > MAX_DOWNLOAD) continue;
@@ -163,6 +166,7 @@ final class UpdateClient {
                 if (!hash.toString().equals(release.sha256())) {
                     throw new SecurityException("APK checksum mismatch");
                 }
+                verifyUpdateIdentity(activity, tmp);
                 if (!tmp.renameTo(done)) throw new SecurityException("Could not stage verified APK");
                 activity.runOnUiThread(callback::ready);
             } catch (Exception e) {
@@ -173,6 +177,35 @@ final class UpdateClient {
                 if (tmp.exists()) tmp.delete();
             }
         }, "ads-kill-download-update").start();
+    }
+
+    /**
+     * Reject wrong package, downgrades and incompatible APK certificates before
+     * opening Android's installer. Android also performs its independent check.
+     * Supported update path: the same dedicated stable signing key on all builds.
+     */
+    private static void verifyUpdateIdentity(Activity activity, File candidate) throws Exception {
+        PackageManager manager = activity.getPackageManager();
+        final int flag = PackageManager.GET_SIGNING_CERTIFICATES;
+        PackageInfo installed = manager.getPackageInfo(activity.getPackageName(), flag);
+        PackageInfo incoming = manager.getPackageArchiveInfo(candidate.getAbsolutePath(), flag);
+        if (incoming == null || !activity.getPackageName().equals(incoming.packageName)) {
+            throw new SecurityException("Unexpected package in update APK");
+        }
+        if (incoming.getLongVersionCode() <= installed.getLongVersionCode()) {
+            throw new SecurityException("Update is not newer than installed app");
+        }
+        if (installed.signingInfo == null || incoming.signingInfo == null) {
+            throw new SecurityException("Signing information unavailable");
+        }
+        Signature[] oldCertificates = installed.signingInfo.getApkContentsSigners();
+        Signature[] newCertificates = incoming.signingInfo.getApkContentsSigners();
+        if (oldCertificates == null || newCertificates == null
+            || oldCertificates.length != 1 || newCertificates.length != 1
+            || !Arrays.equals(oldCertificates[0].toByteArray(),
+                              newCertificates[0].toByteArray())) {
+            throw new SecurityException("Update certificate differs from installed app");
+        }
     }
 
     static void requestInstall(Activity activity) {
