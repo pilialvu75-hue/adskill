@@ -7,6 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="../AdsKill.Windows/HostsSections.cs" Link="HostsSections.cs"/>
+    <Compile Include="../AdsKill.Windows/HostsStore.cs" Link="HostsStore.cs"/>
+    <Compile Include="../AdsKill.Windows/HostsDiagnostics.cs" Link="HostsDiagnostics.cs"/>
     <Compile Include="../AdsKill.Windows/GithubReleaseUpdater.cs" Link="GithubReleaseUpdater.cs"/>
   </ItemGroup>
 </Project>
