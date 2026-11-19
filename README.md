@@ -7,7 +7,7 @@ ADS Kill è sviluppato qui, **separatamente da AIVEXUS / AI Orchestrator**. Ques
 | Piattaforma | Codice | Stato | Release |
 |---|---|---|---|
 | Android 10+ | [android/](android/) | **0.1.9 Beta 1**; DNS-only VPN, pulsante arresto, Smart Reward sperimentale, 4 lingue e updater per APK firmati | [Android beta](https://github.com/pilialvu75-hue/adskill/releases/tag/adskill-android-v0.1.9-beta1) |
-| Windows 11 x64 | [windows/](windows/) | **0.2.0 Beta 1**; filtro HOSTS, controlli di sicurezza, ricerca beta e download ZIP verificato | [Windows beta](https://github.com/pilialvu75-hue/adskill/releases/tag/adskill-windows-v0.2.0-beta1) |
+| Windows 11 x64 | [windows/](windows/) | **0.2.1 Beta 1**; filtro HOSTS, diagnosi DNS Windows (4 domini campione), avviso su emulatori Android, ricerca beta e ZIP verificato | [Windows beta](https://github.com/pilialvu75-hue/adskill/releases/tag/adskill-windows-v0.2.1-beta1) |
 
 **Avvertenza Android:** l'APK debug pubblicato non può sostituire APK debug firmati con certificati differenti. Gli aggiornamenti diretti saranno utilizzabili solo dopo la configurazione una tantum della firma permanente e la prima installazione dell'APK firmato. Il collaudo della disattivazione VPN sul Galaxy S24 FE è ancora aperto. Non disattivare le protezioni del sistema operativo.
 
