@@ -1,17 +1,25 @@
-# ADS Kill
+# ADS Kill — repository indipendente
 
-Repository indipendente per lo sviluppo di ADS Kill (Android / futuri client).
+ADS Kill è sviluppato qui, **separatamente da AIVEXUS / AI Orchestrator**. Questo repository ospita Android e Windows con compilazioni, release e aggiornamenti autonomi. Budget attuale: zero euro; non sono necessari server AIVEXUS o account utente.
 
-## Stato al 18 novembre 2026
-Il repository GitHub nasce **vuoto** e non contiene ancora il codice dell'app già collaudata su un dispositivo Android. Questo README inizializza la base Git; nessun componente qui sostituisce una versione installata.
+## Prodotti
 
-## Privacy & Age — prototipo in ramo isolato
-Obiettivo: aiutare gli utenti adulti a scegliere sistemi di verifica dell'età che rivelino il minimo necessario, preferendo prove conformi e protette rispetto al caricamento di documenti direttamente sul sito. Il prodotto **non aggira i requisiti di accesso dei siti**, non falsifica prove, non dichiara verificata l'età e non effettua richieste Internet.
+| Piattaforma | Codice | Stato | Release |
+|---|---|---|---|
+| Android 10+ | [android/](android/) | **0.1.9 Beta 1**; DNS-only VPN, pulsante arresto, Smart Reward sperimentale, 4 lingue e updater per APK firmati | [Android beta](https://github.com/pilialvu75-hue/adskill/releases/tag/adskill-android-v0.1.9-beta1) |
+| Windows 11 x64 | [windows/](windows/) | **0.2.0 Beta 1**; filtro HOSTS, controlli di sicurezza, ricerca beta e download ZIP verificato | [Windows beta](https://github.com/pilialvu75-hue/adskill/releases/tag/adskill-windows-v0.2.0-beta1) |
 
-Il lavoro sperimentale viene sviluppato su un ramo isolato, senza pubblicare APK, configurare server, raccogliere dati identificativi o modificare applicazioni esistenti.
+**Avvertenza Android:** l'APK debug pubblicato non può sostituire APK debug firmati con certificati differenti. Gli aggiornamenti diretti saranno utilizzabili solo dopo la configurazione una tantum della firma permanente e la prima installazione dell'APK firmato. Il collaudo della disattivazione VPN sul Galaxy S24 FE è ancora aperto. Non disattivare le protezioni del sistema operativo.
 
-Licenze e dipendenze del prodotto Android originale dovranno essere esaminate prima di qualsiasi distribuzione commerciale. Non attribuire al codice originale una licenza prima dell'audit.
+## Aggiornamenti autonomi
 
-Riferimenti:
-- [Commissione europea: EU age verification](https://digital-strategy.ec.europa.eu/en/policies/eu-age-verification)
-- [Referentiel français de vérification de l'âge](https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000050385836)
+- Android: repo GitHub di riferimento **`pilialvu75-hue/adskill`**, release `adskill-android-vX.Y.Z-betaN`, asset `AdsKill-Android-vX.Y.Z-betaN-signed.apk`, verifica SHA-256, identità pacchetto, incremento versionCode e certificato. Controllo opzionale all'apertura (una volta al giorno) o manuale; installazione solo con conferma Android.
+- Windows: repo GitHub di riferimento **`pilialvu75-hue/adskill`**, release `adskill-windows-vX.Y.Z-betaN`; verifica SHA-256 e sostituzione del ZIP portable solo dopo scelta dell'utente. Windows EXE attualmente non firmato.
+- [Istruzioni operative per firma Android permanente](docs/SIGNING_AND_UPDATES.md). Il keystore non viene committato e non viene condiviso con AIVEXUS.
+- [Storico dello sviluppo Android originale](docs/ANDROID_HISTORY.md).
+
+## Privacy & Age — lavori sperimentali separati
+
+Sono conservati nei rami `feature/age-privacy-local-preflight` e `feature/privacy-age-edge-browser`, **non integrati** nelle beta di blocco pubblicità. Scopo: aiutare gli adulti a scegliere sistemi di verifica dell'età conformi e a divulgazione minima, senza falsificare prove, aggirare obblighi legali o raccogliere documenti nel nostro server. L'esperimento non deve alterare il comportamento delle app già installate.
+
+Licenze e dipendenze richiedono un audit prima della distribuzione commerciale. Nessuna garanzia di rimozione degli annunci video YouTube: Android usa solo DNS, Windows attualmente filtra HOSTS.
