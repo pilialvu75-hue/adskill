@@ -10,7 +10,7 @@ namespace AdsKill.Windows;
 public static class GithubReleaseUpdater
 {
     public sealed record ReleaseInfo(string Tag, string Url, string Sha256);
-    private const string CurrentTag = "adskill-windows-v0.2.0-beta1";
+    private const string CurrentTag = "adskill-windows-v0.2.1-beta1";
     private const string ReleasePrefix = "https://github.com/pilialvu75-hue/adskill/releases/download/";
     private static readonly Regex TagSyntax = new(
         @"^adskill-windows-v(?<v>\d+\.\d+\.\d+)(?:-beta(?<beta>\d+))?$",
