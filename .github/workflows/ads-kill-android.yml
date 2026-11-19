@@ -1,0 +1,107 @@
+name: ADS Kill - Android standalone beta
+on:
+  push:
+    branches:
+      - main
+      - integration/android-0.1.9-updates
+    paths:
+      - 'android/**'
+      - '.github/workflows/ads-kill-android.yml'
+      - 'scripts/ads-kill-signing-setup.ps1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: adskill-android-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  android-beta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Install Android API 35
+        shell: bash
+        run: |
+          SDKMANAGER=$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | head -n 1)
+          test -n "$SDKMANAGER"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+      - name: Build Android debug APK for developer testing
+        working-directory: android
+        run: gradle --no-daemon --stacktrace assembleDebug
+      - name: Check identity, version, icon and user-disconnectable VPN
+        shell: bash
+        run: |
+          APK=android/app/build/outputs/apk/debug/app-debug.apk
+          BADGING=$("$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK")
+          printf '%s\n' "$BADGING" | grep -F "package: name='dev.aivexus.adskill' versionCode='11' versionName='0.1.9-beta1'"
+          printf '%s\n' "$BADGING" | grep -F "application-icon"
+          grep -F 'android.net.VpnService.SUPPORTS_ALWAYS_ON' android/app/src/main/AndroidManifest.xml
+          grep -F 'android:value="false"' android/app/src/main/AndroidManifest.xml
+          grep -F 'PREF_VPN_REQUESTED' android/app/src/main/java/dev/aivexus/adskill/AdsVpnService.java
+          grep -F 'https://api.github.com/repos/pilialvu75-hue/adskill' android/app/src/main/java/dev/aivexus/adskill/UpdateClient.java
+      - name: Build stable-signed Android APK when dedicated key is configured
+        id: signing
+        working-directory: android
+        shell: bash
+        env:
+          ADS_KILL_KEYSTORE_BASE64: ${{ secrets.ADS_KILL_KEYSTORE_BASE64 }}
+          ADS_KILL_STORE_PASSWORD: ${{ secrets.ADS_KILL_STORE_PASSWORD }}
+          ADS_KILL_KEY_ALIAS: ${{ secrets.ADS_KILL_KEY_ALIAS }}
+          ADS_KILL_KEY_PASSWORD: ${{ secrets.ADS_KILL_KEY_PASSWORD }}
+        run: |
+          if [[ -z "$ADS_KILL_KEYSTORE_BASE64" || -z "$ADS_KILL_STORE_PASSWORD" || -z "$ADS_KILL_KEY_ALIAS" || -z "$ADS_KILL_KEY_PASSWORD" ]]; then
+            echo 'No stable ADS Kill signing secrets configured. Only debug APK is available.'
+            echo 'signed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          export ADS_KILL_KEYSTORE_PATH="$RUNNER_TEMP/ads-kill-release.jks"
+          umask 077
+          trap 'rm -f "$ADS_KILL_KEYSTORE_PATH"' EXIT
+          printf '%s' "$ADS_KILL_KEYSTORE_BASE64" | base64 --decode > "$ADS_KILL_KEYSTORE_PATH"
+          gradle --no-daemon --stacktrace assembleRelease
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+          cp app/build/outputs/apk/release/app-release.apk ../AdsKill-Android-v0.1.9-beta1-signed.apk
+          echo 'signed=true' >> "$GITHUB_OUTPUT"
+      - name: Package debug APK
+        shell: bash
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk AdsKill-Android-v0.1.9-beta1-debug.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AdsKill-Android-v0.1.9-beta1
+          path: |
+            AdsKill-Android-v0.1.9-beta1-debug.apk
+            AdsKill-Android-v0.1.9-beta1-signed.apk
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Publish prerelease in independent ADS Kill repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=adskill-android-v0.1.9-beta1
+          assets=(AdsKill-Android-v0.1.9-beta1-debug.apk)
+          if [[ -f AdsKill-Android-v0.1.9-beta1-signed.apk ]]; then
+            assets+=(AdsKill-Android-v0.1.9-beta1-signed.apk)
+            notes='ADS Kill Android 0.1.9 Beta 1 migrated to the independent repository. STABLY SIGNED APK is available. Future in-place upgrades require the SAME signing key and a higher Android versionCode. Earlier debug-signed betas from AIVEXUS require a one-time uninstall after stopping VPN. Manual and optional daily update checks use this standalone repository. Physical-device VPN shutdown not yet verified.'
+          else
+            notes='ADS Kill Android 0.1.9 Beta 1 migrated to the independent repository. DEBUG APK ONLY: this build CANNOT update an installed beta with a different signature. Do not uninstall solely to test the updater. Configure permanent ADS_KILL_* repository secrets to publish the first stably signed APK; physical-device VPN shutdown not yet verified.'
+          fi
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" "${assets[@]}" --target "$GITHUB_SHA" --prerelease \
+              --title 'ADS Kill Android 0.1.9 Beta 1 - independent repository' --notes "$notes"
+          else
+            gh release upload "$TAG" "${assets[@]}" --clobber
+            gh release edit "$TAG" --notes "$notes" --prerelease
+          fi
