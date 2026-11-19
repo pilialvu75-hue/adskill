@@ -15,6 +15,16 @@ Verify(protectedHosts.Contains(":: ad.doubleclick.net"), "IPv6 mapping");
 Verify(HostsSections.Enable(protectedHosts) == protectedHosts, "idempotent enable");
 Verify(HostsSections.Disable(protectedHosts) == original, "preserve original and disable");
 Verify(HostsSections.Disable(original) == original, "idempotent disable");
+Verify(HostsDiagnostics.HasBlockRows(protectedHosts, "ad.doubleclick.net"),
+    "diagnostic recognizes complete ad domain mappings");
+Verify(!HostsDiagnostics.HasBlockRows(original, "ad.doubleclick.net"),
+    "diagnostic does not claim blocking without HOSTS entries");
+Verify(!HostsDiagnostics.HasBlockRows(
+    protectedHosts.Replace(":: ad.doubleclick.net", ":: ad.example.invalid"), "ad.doubleclick.net"),
+    "diagnostic rejects missing IPv6 mapping");
+Verify(!HostsDiagnostics.HasBlockRows(protectedHosts, "www.wewardapp.com"),
+    "diagnostic does not invent a WeWard-specific blocking rule");
+
 
 string userChange = protectedHosts.Replace(
     "# original entry", "# modified by another app");
