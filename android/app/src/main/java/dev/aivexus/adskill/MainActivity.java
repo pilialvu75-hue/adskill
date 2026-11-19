@@ -136,6 +136,15 @@ public final class MainActivity extends Activity {
         setTab(false);
         renderSavedChoices();
         refresh();
+        // Automatic *check* at launch, never a silent APK download/install.
+        if (!debugBuild() && preferences().getBoolean("auto_check", true)) {
+            long now = System.currentTimeMillis();
+            long last = preferences().getLong("last_update_check", 0L);
+            if (last == 0L || now < last || now - last > 86_400_000L) {
+                preferences().edit().putLong("last_update_check", now).apply();
+                checkUpdates();
+            }
+        }
     }
 
     private GradientDrawable rounded(int color) {
@@ -350,6 +359,13 @@ public final class MainActivity extends Activity {
         LinearLayout updater = card();
         heading(updater, t("section_updates"));
         updater.addView(label(installedVersion(), 15, true, UiPrefs.textColor(this)));
+        CheckBox autoCheck = new CheckBox(this);
+        autoCheck.setText(t("auto_check"));
+        autoCheck.setTextColor(UiPrefs.textColor(this));
+        autoCheck.setChecked(preferences().getBoolean("auto_check", true));
+        autoCheck.setOnCheckedChangeListener((button, enabled) ->
+            preferences().edit().putBoolean("auto_check", enabled).apply());
+        updater.addView(autoCheck);
         updater.addView(label(
             t(debugBuild() ? "debug_channel" : "signed_channel"),
             12, false, UiPrefs.secondary(this)));
@@ -362,7 +378,7 @@ public final class MainActivity extends Activity {
         updateStatus.setText(debugBuild() ? t("debug_no_inplace") : t("signed_update_ready"));
         Button githubReleases = actionButton(t("open_releases"), false);
         githubReleases.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW,
-            Uri.parse("https://github.com/pilialvu75-hue/Ai-orchestrator-riserva/releases?q=ads-kill"))));
+            Uri.parse("https://github.com/pilialvu75-hue/adskill/releases"))));
         updater.addView(githubReleases);
         settingsPage.addView(updater);
     }
