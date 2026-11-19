@@ -11,6 +11,8 @@ public sealed class MainForm : Form
     private readonly Button _enable;
     private readonly Button _disable;
     private readonly Button _reward;
+    private readonly Label _filterDiagnostic;
+    private readonly Button _checkFiltering;
     private readonly Label _updateStatus;
     private readonly Button _checkUpdates;
     private readonly Button _downloadUpdate;
@@ -21,9 +23,9 @@ public sealed class MainForm : Form
 
     public MainForm()
     {
-        Text = "Ads Kill — Windows (beta)";
+        Text = "Ads Kill — Windows 0.2.1 beta";
         Width = 635;
-        Height = 720;
+        Height = 835;
         MinimumSize = new Size(580, 465);
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = Color.FromArgb(247, 250, 253);
@@ -55,7 +57,7 @@ public sealed class MainForm : Form
         }
 
         AddLabel("Ads Kill", 25, true, 49);
-        AddLabel("Protezione pubblicità DNS con file HOSTS • Windows 11 x64", 11, false, 34);
+        AddLabel("Filtro HOSTS (30 domini) • Windows 11 x64 • beta 0.2.1", 11, false, 34);
         _status = AddLabel("Verifica protezione...", 17, true, 39);
         _rules = AddLabel("Regole: " + HostsSections.Domains.Length + " domini", 11, false, 32);
 
@@ -93,6 +95,22 @@ public sealed class MainForm : Form
         _reward.Click += (_, _) => BeginReward();
 
         _message = AddLabel("", 11, false, 73);
+        AddLabel("VERIFICA REALE DEL FILTRO WINDOWS", 15, true, 35);
+        _checkFiltering = new Button
+        {
+            Text = "Verifica regole HOSTS e DNS",
+            Width = 282, Height = 42
+        };
+        outer.Controls.Add(_checkFiltering);
+        _filterDiagnostic = AddLabel(
+            "Il pulsante Protezione attiva conferma soltanto le regole HOSTS. " +
+            "Non conferma il blocco di tutte le pubblicita, soprattutto dentro emulatori Android.",
+            10, false, 128);
+        _checkFiltering.Click += async (_, _) => await CheckFilterAsync();
+        AddLabel("WeWard in WEmulDroid/emulatore Android: il sistema Android puo ignorare " +
+            "il file HOSTS del PC. Questa beta Windows NON filtra il traffico dentro " +
+            "l'emulatore. Per testare WeWard li serve un blocco configurato nel sistema Android.",
+            10, false, 110);
         AddLabel("AGGIORNAMENTI ADS KILL", 15, true, 35);
         _updateStatus = AddLabel("Controllo automatico delle beta su GitHub...", 11, false, 45);
         var updatesRow = new FlowLayoutPanel {
@@ -128,6 +146,19 @@ public sealed class MainForm : Form
         RefreshState();
     }
 
+
+    private async Task CheckFilterAsync()
+    {
+        _checkFiltering.Enabled = false;
+        _filterDiagnostic.Text = "Verifica in corso: risoluzione DNS Windows su 4 domini campione...";
+        try
+        {
+            _filterDiagnostic.Text = await HostsDiagnostics.RunAsync(_updateCancel.Token);
+        }
+        catch (OperationCanceledException) { _filterDiagnostic.Text = "Verifica annullata."; }
+        catch (Exception ex) { _filterDiagnostic.Text = "Verifica non riuscita: " + ex.Message; }
+        finally { if (!IsDisposed && !Disposing) _checkFiltering.Enabled = true; }
+    }
 
     private async Task CheckUpdatesAsync()
     {
@@ -263,7 +294,7 @@ public sealed class MainForm : Form
         try
         {
             bool enabled = HostsStore.IsProtected();
-            _status.Text = enabled ? "● Protezione attiva" : "○ Protezione disattivata";
+            _status.Text = enabled ? "● Regole HOSTS installate" : "○ Regole HOSTS disattivate";
             _status.ForeColor = enabled ? Color.DarkGreen : Color.DarkRed;
             _rules.Text = enabled
                 ? HostsSections.Domains.Length + " domini pubblicitari nel file HOSTS"
