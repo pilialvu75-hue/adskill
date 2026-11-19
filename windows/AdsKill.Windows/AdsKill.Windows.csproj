@@ -8,7 +8,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>AdsKill.Windows</AssemblyName>
     <RootNamespace>AdsKill.Windows</RootNamespace>
-    <Version>0.2.0</Version>
+    <Version>0.2.1</Version>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 </Project>
