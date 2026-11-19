@@ -78,6 +78,7 @@ final class UiPrefs {
         put("english", "Inglese", "Anglais", "English", "Inglés");
         put("spanish", "Spagnolo", "Espagnol", "Spanish", "Español");
         put("section_updates", "AGGIORNAMENTI", "MISES À JOUR", "UPDATES", "ACTUALIZACIONES");
+        put("auto_check", "Controlla nuove beta all'apertura dell'app (max una volta al giorno)", "Rechercher les nouvelles bêtas au lancement (une fois par jour)", "Check for new betas on launch (once a day)", "Buscar nuevas betas al iniciar (una vez al día)");
         put("installed_version", "Versione installata: %1$s (build %2$d)", "Version installée : %1$s (build %2$d)", "Installed version: %1$s (build %2$d)", "Versión instalada: %1$s (build %2$d)");
         put("version_unknown", "Versione installata non disponibile", "Version installée indisponible", "Installed version unavailable", "Versión instalada no disponible");
         put("debug_channel", "Canale di prova: APK debug (firma temporanea)", "Canal de test : APK debug (signature temporaire)", "Test channel: debug APK (temporary signature)", "Canal de pruebas: APK debug (firma temporal)");
@@ -88,7 +89,7 @@ final class UiPrefs {
         put("open_releases", "Apri beta su GitHub", "Ouvrir les bêtas GitHub", "Open GitHub betas", "Abrir betas en GitHub");
         put("update_network_error", "Controllo GitHub non riuscito: verifica la connessione Internet e riprova.", "Échec de la vérification GitHub : contrôlez Internet et réessayez.", "GitHub check failed: verify Internet and try again.", "Error al consultar GitHub: comprueba Internet y vuelve a intentar.");
         put("check_updates", "Controlla nuove beta", "Rechercher des bêtas", "Check beta updates", "Buscar versiones beta");
-        put("update_info", "Controllo manuale GitHub. Solo APK verificati con firma persistente.", "Vérification manuelle GitHub. Seulement APK vérifiés avec signature stable.", "Manual GitHub check. Only APKs with verified stable signing.", "Búsqueda manual en GitHub. Solo APK verificados con firma estable.");
+        put("update_info", "Aggiornamenti ufficiali dal repository Ads Kill autonomo. Controllo automatico opzionale o manuale; download e installazione richiedono conferma. Sono accettate solo versioni con firma compatibile.", "Mises à jour du dépôt ADS Kill indépendant. Vérification automatique optionnelle ou manuelle; téléchargement et installation confirmés par l'utilisateur. Même signature requise.", "Updates from the independent ADS Kill repository. Optional automatic or manual check; download and installation need consent. Matching signature required.", "Actualizaciones desde el repositorio independiente ADS Kill. Comprobación automática opcional o manual; la descarga e instalación requieren permiso. Firma compatible obligatoria.");
         put("checking", "Controllo versioni...", "Recherche des versions...", "Checking versions...", "Buscando versiones...");
         put("no_updates", "Nessuna beta firmata più recente", "Pas de nouvelle bêta signée", "No newer signed beta", "Sin nueva beta firmada");
         put("new_version", "Nuova versione: %s", "Nouvelle version : %s", "New version: %s", "Nueva versión: %s");
