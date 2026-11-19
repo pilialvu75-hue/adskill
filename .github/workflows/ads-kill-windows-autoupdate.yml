@@ -2,6 +2,7 @@ name: ADS Kill - Windows standalone beta
 on:
   push:
     branches:
+      - main
       - feature/windows-auto-updater-0.2.0
     paths:
       - 'windows/**'
